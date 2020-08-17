@@ -1,6 +1,6 @@
 ---
 - name: NGINX Webserver
-  hosts: itg402-02
+  hosts: instance-02
   become: yes
 
   tasks:
