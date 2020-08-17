@@ -1,0 +1,16 @@
+---
+- name: "SELinux Status"
+  hosts: all
+  become: yes
+  tasks:
+    - name: "SELinux Enabled"
+      selinux: 
+        policy: targeted
+        state: enforcing
+        conf: /etc/selinux/config
+      when: ansible_os_family == "RedHat"
+      register: sestatus     
+    - name: "Report Status"
+      debug:
+        var: sestatus.state
+

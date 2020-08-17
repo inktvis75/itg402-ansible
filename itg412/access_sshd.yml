@@ -1,0 +1,30 @@
+---
+- name: Example playbook for blockinfile
+  hosts: all
+
+  tasks:
+  - name: Add matchblock for a certain user
+    become: yes
+    blockinfile:
+      dest: /etc/ssh/sshd_config
+      block: |
+        Match User {{ item }}
+        ChrootDirectory /home/{{ item }}/sftp
+        ForceCommand internal-sftp -l INFO -f AUTH
+        X11Forwarding no
+        AllowTcpForwarding no
+      backup: yes
+      marker: "# Added SFTP only Matchblok for {{ item }}"
+    notify: restart_sshd
+    with_items:
+      - peter
+      - john
+      - mary
+  handlers:
+    - name: Restart/reload sshd_config
+      become: yes
+      systemd:
+        service: sshd
+        state: restarted
+      listen: restart_sshd
+
