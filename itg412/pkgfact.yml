@@ -1,0 +1,18 @@
+---
+- name: "Check if packages are installed"
+  hosts: all
+  become: yes
+  tasks:
+    - name: "use package_facts module"
+      package_facts: {}
+    - name: "test on epel-release rpm"
+      when: ansible_facts.packages["epel-release"] is undefined
+      block:
+      - yum:
+          name: >-
+            https://dl.fedoraproject.org/pub/
+            epel/epel-release-latest-8.noarch.rpm
+          state: present
+      - yum:
+          name: epel-release
+          state: latest

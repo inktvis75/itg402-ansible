@@ -1,0 +1,9 @@
+---
+- name: System optimization
+  hosts: servers
+  tasks:
+   - name: Virtual Machine Swappiness
+     sysctl:
+       name: vm.swappiness
+       value: 15
+     when: ansible_virtualization_role == 'guest'

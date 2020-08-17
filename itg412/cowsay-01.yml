@@ -1,0 +1,9 @@
+---
+- name: cowsay example
+  hosts: all
+
+  tasks:
+    - name: cow says hi
+      shell: cowsay hi
+      register: result_list
+      ignore_errors: true

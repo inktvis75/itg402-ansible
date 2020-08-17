@@ -1,0 +1,16 @@
+---
+- name: cowsay example
+  hosts: all
+
+  tasks:
+    - name: cow says hi
+      shell: cowsay
+      register: result_list
+      ignore_errors: true
+    - name: Install cowsay
+      become: yes
+      dnf:
+        name: cowsay
+        state: latest
+        enablerepo: epel
+      when: result_list.rc != 0
