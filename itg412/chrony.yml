@@ -1,0 +1,36 @@
+---
+- name: "Chrony"
+  hosts: all
+  become: yes
+  become_user: root
+  remote_user: student
+  tasks:
+    - name: "Chrony software"
+      dnf: 
+        name: chrony
+        state: present
+    - name: "Read variables"
+      include_vars:
+        file: ~/Ansible/chrony.var
+    - name: "Chrony Configuration"
+      template: 
+        src: ~/Ansible/chrony.j2
+        dest: /etc/chrony.conf
+        setype: etc_t
+        owner: root
+        group: root
+        mode: 644
+        backup: yes
+      notify: chrony_config
+    - name: "SELinux Policy"
+      sefcontext:
+        target: /etc/chrony.conf
+        setype: etc_t
+        state: present
+  handlers:
+    - name: "Restart Chrony"
+      listen: chrony_config
+      systemd:
+        name: chronyd
+        state: restarted
+

@@ -1,0 +1,6 @@
+ntp_pool: '0.nl.pool.ntp.org'
+ntp_driftfile: '/var/lib/chrony/drift'
+ntp_makestep: '1.0 3'
+ntp_keyfile: '/etc/chrony.keys' 
+ntp_leapsectz: 'right/UTC'
+ntp_logdir: '/var/log/chrony'

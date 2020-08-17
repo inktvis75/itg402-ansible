@@ -1,0 +1,7 @@
+# {{ ansible_managed }} 
+{% for host in groups['all'] %}
+{% if 'ansible_eth0' in hostvars[host] %}
+{{ hostvars[host]['ansible_eth0']['ipv4']['address'] }}  {{ host }}
+{% endif %}
+{% endfor %}
+
