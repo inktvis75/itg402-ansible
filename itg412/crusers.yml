@@ -1,0 +1,23 @@
+---
+- name: Playbook to create users
+  hosts: servers
+  become: yes
+
+  vars:
+    user_list:
+      - { name: 'student21', groups: 'wheel', gecos: 'peter' }
+      - { name: 'student22', groups: 'root' , gecos: 'mary' }
+      - { name: 'student23', groups: 'wheel', gecos: 'frederik' }
+      - { name: 'student24', groups: 'wheel' , gecos: 'sander' }
+      - { name: 'student25', groups: 'wheel' , gecos: 'linus' }
+
+  tasks:
+    - name: Create users
+      user:
+        name: "{{ item.name }}"
+        comment: "{{ item.gecos }}"
+        groups: "{{ item.groups }}"
+        state: present
+        update_password: on_create
+        password: "{{ 'welk0mITG' | password_hash('sha512') }}"
+      with_items: "{{ user_list }}"
