@@ -1,0 +1,11 @@
+---
+- name: Apache Lab
+  hosts: instance-03
+  become: yes
+  gather_facts: yes
+
+  tasks:
+  - name: apache present
+    dnf:
+      name: httpd
+      state: present
