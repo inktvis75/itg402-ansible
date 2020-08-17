@@ -1,0 +1,24 @@
+---
+- name: Create Multiple Users
+  hosts: servers
+  become: yes
+  tasks:
+    - name: Create multiple users
+      user:
+        name: "{{ item }}"
+        comment: "Company User {{ item }}"
+        create_home: yes
+        expires: -1
+        generate_ssh_key: yes
+        groups: users
+        shell: /bin/bash
+        state: present
+        password: "{{ 'My$ecureP@ss' | password_hash('sha512') }}"
+        update_password: on_create
+      with_items:
+        - "peter"
+        - "mary"
+        - "frederik"
+        - "sander"
+        - "linus"
+
