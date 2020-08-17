@@ -1,0 +1,28 @@
+" look and feel
+colorscheme evening
+syntax on
+highlight Pmenu guibg=white guifg=black gui=bold
+highlight Comment gui=bold
+highlight Normal gui=none
+set ruler laststatus=2 showcmd showmode
+set number
+set cursorline
+set title
+
+" indent & wrap
+filetype plugin indent on
+set tabstop=4 softtabstop=4 shiftwidth=4 expandtab smarttab autoindent
+set wrap breakindent linebreak list
+set formatoptions=l
+set textwidth=80
+
+" indent yml
+autocmd FileType yaml setlocal ai ts=2 sw=2 et nu
+
+" default encoding
+set encoding=utf-8
+
+" Pathogen Plugin Manager
+" mkdir -p ~/.vim/autoload ~/.vim/bundle && \
+" curl -LSso ~/.vim/autoload/pathogen.vim https://tpo.pe/pathogen.vim
+execute pathogen#infect()
