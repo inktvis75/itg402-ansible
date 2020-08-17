@@ -1,0 +1,29 @@
+---
+- name: NGINX Webserver
+  hosts: itg402-02
+  become: yes
+
+  tasks:
+  - name: Disable Nginx Module
+    command:
+      cmd: dnf module disable -y nginx
+      warn: false
+
+  - name: Repository Configuration
+    yum_repository:
+      name: nginxrepo
+      description: Nginx Repository
+      baseurl: http://nginx.org/packages/centos/$releasever/$basearch/
+      gpgkey: http://nginx.org/packages/keys/nginx_signing.key
+      enabled: true
+
+  - name: NGINX
+    dnf:
+      name:
+        - nginx
+        - nginx-module-njs
+        - nginx-module-perl
+        - nginx-module-xslt
+      state: present
+      enablerepo: nginxrepo
+      disablerepo: AppStream

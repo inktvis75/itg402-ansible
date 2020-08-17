@@ -1,0 +1,12 @@
+---
+- name: NGINX Webserver
+  hosts: instance-02
+  become: yes
+
+  tasks:
+  - name: Repository Configuration
+    yum_repository:
+      name: nginxrepo
+      description: Nginx Repository
+      baseurl: http://nginx.org/packages/centos/$releasever/$basearch/
+      gpgkey: http://nginx.org/packages/keys/nginx_signing.key
