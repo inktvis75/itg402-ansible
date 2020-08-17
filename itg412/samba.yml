@@ -1,0 +1,40 @@
+---
+- name: "Samba Configuration"
+  hosts: instance-02
+  become: true
+  become_user: root
+  remote_user: student
+  tasks:
+    - name: "Samba and Firewalld"
+      block:
+        - name: "Samba and Firewalld packages"
+          yum:
+            name:
+              - samba
+              - samba-client
+              - cifs-utils
+              - firewalld
+            state: present
+            update_cache: yes
+        - name: "Firewalld service"
+          systemd:
+            name: firewalld.service
+            enabled: yes
+            state: started
+        - name: "Samba service"
+          systemd:
+            name: smb.service
+            enabled: yes
+            state: started
+        - name: "Netbios service"
+          systemd:
+            name: nmb.service
+            enabled: yes
+            state: started
+        - name: "Samba firewalld service"
+          firewalld:
+            service: samba
+            state: enabled
+            zone: public
+            permanent: yes
+

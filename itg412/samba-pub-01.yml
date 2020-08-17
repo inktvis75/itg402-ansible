@@ -1,0 +1,23 @@
+---
+- name: "Samba Public Share"
+  hosts: instance-02
+  become: true
+  become_user: root
+  remote_user: student
+  tasks:
+    - name: "Samba Public Share"
+      block: 
+        - name: directory /srv/samba_pub
+          file:
+            path: /srv/samba_pub
+            owner: root
+            group: root
+            mode: 0777
+            setype: public_content_rw_t
+            state: directory
+        - name: "SELinux Policy Samba Public Share"
+          seboolean: 
+            name: smbd_anon_write 
+            persistent: yes
+            state: yes
+
