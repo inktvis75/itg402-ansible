@@ -1,0 +1,26 @@
+---
+- name: Apache Lab
+  hosts: instance-02
+  become: yes
+  gather_facts: yes
+  tasks:
+
+  - name: apache present
+    dnf:
+      name: httpd
+      state: present
+
+  - name: firewall open - http(s)
+    block:
+      - firewalld:
+          zone: public
+          service: http
+          state: enabled
+          immediate: yes
+          permanent: yes
+      - firewalld:
+          zone: public
+          service: https
+          state: enabled
+          immediate: yes
+          permanent: yes
