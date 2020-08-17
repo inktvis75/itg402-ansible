@@ -1,0 +1,10 @@
+---
+- name: facts
+  hosts: all
+  tasks:
+    - name: show architecture
+      debug:
+        var: ansible_architecture
+    - name: show ip addresses
+      debug:
+        var: ansible_all_ipv4_addresses
