@@ -1,0 +1,5 @@
+Uptime report on {{ ansible_date_time.date }}
+{% for host in groups['all'] %}
+-  {{ host }} has uptime: {{ hostvars[host]['ansible_uptime_seconds'] }}
+{% endfor %}
+

@@ -1,0 +1,15 @@
+- name: Generate uptime report
+  hosts: all 
+  
+  tasks:  
+  - name: Template uptime report
+    connection: local
+    template:
+      src: uptime.j2
+  - name: Template uptime report
+    connection: local
+    template:
+      src: uptime.j2
+      dest: report.txt
+    when: (inventory_hostname == 'instance-01')
+
