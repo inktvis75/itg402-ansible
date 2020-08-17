@@ -1,0 +1,16 @@
+---
+- name: Users Management
+  hosts: servers
+  become: yes
+
+  tasks:
+    - name: unprivileged users
+      user:
+        name: peter
+        comment: "Peter Johnson"
+        create_home: yes
+        expires: -1
+        generate_ssh_key: yes
+        groups: users
+        shell: /bin/bash
+        state: present

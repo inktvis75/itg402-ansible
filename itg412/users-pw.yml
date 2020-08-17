@@ -1,0 +1,18 @@
+---
+- name: Users Management
+  hosts: servers
+  become: yes
+
+  tasks:
+    - name: unprivileged users
+      user:
+        name: peter
+        comment: "Peter Johnson"
+        create_home: yes
+        expires: -1
+        generate_ssh_key: yes
+        groups: users
+        shell: /bin/bash
+        password: "$6$UlfwwcvHlM8$6pbhJE7lVd0OKxvaIFq3IrE3sU.KzJ9wbrM6d897kkZCs0DCugtEhr6HPyOxYE72yKSTNlyMelFQpQ4GCTuda1"
+        update_password: on_create
+        state: present
