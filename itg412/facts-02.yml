@@ -1,0 +1,11 @@
+---
+- name: facts
+  hosts: all
+  tasks:
+  - name: show architecture
+    debug:
+      var: ansible_architecture
+  - name: show ip addresses
+    debug:
+      msg: "The ip address of this node is: {{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }}"
+

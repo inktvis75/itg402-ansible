@@ -1,0 +1,13 @@
+---
+- name: Provision /etc/hosts on each VM
+  hosts: servers
+  tasks:
+    - name: Add host entries from all hosts to /etc/hosts
+      become: yes
+      lineinfile:
+        backup: yes
+        path: /etc/hosts
+        state: present
+        regexp: '.*{{ item }}$'
+        line: "{{ hostvars[item]['ansible_default_ipv4']['address'] }} {{ item }}"
+      with_items: "{{ groups['servers'] }}"
