@@ -1,0 +1,30 @@
+---
+- name: Example playbook for replace
+  hosts: all
+  become: yes
+  
+  tasks:
+  - name: Change PermitRootLogin in sshd_config
+    replace:
+      path: /etc/ssh/sshd_config
+      backup: yes
+      regexp: '^#?PermitRootLogin .*$'
+      replace: 'PermitRootLogin no'
+      validate: '/usr/sbin/sshd -tf %s'
+    notify: restart_sshd
+  - name: Change Banner in sshd_config
+    replace:
+      path: /etc/ssh/sshd_config
+      backup: yes
+      regexp: '^#?Banner .*$'
+      replace: 'Banner /etc/issue.net'
+      validate: '/usr/sbin/sshd -tf %s'
+    notify: restart_sshd
+  handlers:
+  - name: Restarting sshd upon request
+    become: yes
+    systemd:
+      service: sshd
+      state: restarted
+    listen: restart_sshd
+

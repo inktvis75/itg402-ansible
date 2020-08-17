@@ -1,0 +1,17 @@
+---
+- name: Playbook to create users
+  hosts: servers
+  vars_files:
+     - user_list.yml
+  tasks:
+  - name: Create users
+    become: yes
+    user:
+      name: "{{ item.name }}"
+      comment: "{{ item.gecos }}"
+      groups: "{{ item.groups }}"
+      state: present
+      update_password: on_create
+      password: "{{ 'My$ecureP@ss' | password_hash('sha512') }}"
+    loop: "{{ user_list }}"
+

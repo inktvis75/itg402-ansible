@@ -19,5 +19,5 @@
         groups: "{{ item.groups }}"
         state: present
         update_password: on_create
-        password: "{{ 'welk0mITG' | password_hash('sha512') }}"
+        password: "{{ 'My$ecureP@ss' | password_hash('sha512') }}"
       with_items: "{{ user_list }}"
