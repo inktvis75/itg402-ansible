@@ -12,7 +12,7 @@
   tasks:
   - name: apache present
     dnf:
-        name: httpd
+      name: httpd
       state: present
   - name: firewall open - http(s)
     block:
@@ -28,40 +28,40 @@
           state: enabled
           immediate: yes
           permanent: yes
-   - name: hosts file
-     lineinfile:
-       backup: yes
-       dest: /etc/hosts        
-       regexp: '.*{{ item }}$'
-       line: "{{ ansible_default_ipv4.address }} {{ item }}"
-     loop:
-       - host1.test
-       - host2.test
-       - host3.test
-   - name: vhost template
-     template: 
-       validate: "/usr/sbin/apachectl configtest %s"
-       src: apache.j2 
-       dest: "/etc/httpd/conf.d/virtualhost.conf"
-     with_items: "{{ apache_vhosts }}"
-     notify: restart_httpd
-   - name: vhost directories
-     file:
-       path: "{{ item.documentroot }}"
-       recurse: yes
-       state: directory
-       mode: 0770
-       owner: root
-       group: apache
-       setype: httpd_sys_content_t
-     with_items: "{{ apache_vhosts }}"
-      
+  - name: hosts file
+    lineinfile:
+      backup: yes
+      dest: /etc/hosts
+      regexp: '.*{{ item }}$'
+      line: "{{ ansible_default_ipv4.address }} {{ item }}"
+    loop:
+      - host1.test
+      - host2.test
+      - host3.test
+  - name: vhost template
+    template:
+      validate: "/usr/sbin/apachectl configtest %s"
+      src: apache.j2
+      dest: "/etc/httpd/conf.d/virtualhost.conf"
+    with_items: "{{ apache_vhosts }}"
+    notify: restart_httpd
+  - name: vhost directories
+    file:
+      path: "{{ item.documentroot }}"
+      recurse: yes
+      state: directory
+      mode: 0770
+      owner: root
+      group: apache
+      setype: httpd_sys_content_t
+    with_items: "{{ apache_vhosts }}"
+
   - name: selinux context on vhost directories
-     sefcontext:
-       target: "{{ item.documentroot + '(/.*)?' }}"
-       setype: httpd_sys_content_t
-       state: present
-     with_items: "{{ apache_vhosts }}"
+    sefcontext:
+      target: "{{ item.documentroot + '(/.*)?' }}"
+      setype: httpd_sys_content_t
+      state: present
+    with_items: "{{ apache_vhosts }}"
 
   - name: webserver running
     systemd:
@@ -73,5 +73,4 @@
     listen: restart_httpd
     systemd:
       name: httpd
-      state: restarted
-
+      state: started
