@@ -61,7 +61,7 @@
        target: "{{ item.documentroot + '(/.*)?' }}"
        setype: httpd_sys_content_t
        state: present
-     with_items: "{{ apache_vhosts }}
+     with_items: "{{ apache_vhosts }}"
 
   - name: webserver running
     systemd:
