@@ -12,7 +12,7 @@
   tasks:
   - name: apache present
     dnf:
-      name: http
+        name: httpd
       state: present
   - name: firewall open - http(s)
     block:
