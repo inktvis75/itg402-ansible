@@ -1,0 +1,77 @@
+---
+- name: Apache Lab
+  hosts: instance-02
+  become: yes
+  gather_facts: yes
+
+  vars:
+    apache_vhosts:
+      - { servername: "host1.test", documentroot: "/srv/www/host1"}
+      - { servername: "host2.test", documentroot: "/srv/www/host2"}
+      - { servername: "host3.test", documentroot: "/srv/www/host3"}
+  tasks:
+  - name: apache present
+    dnf:
+      name: http
+      state: present
+  - name: firewall open - http(s)
+    block:
+      - firewalld:
+          zone: public
+          service: http
+          state: enabled
+          immediate: yes
+          permanent: yes
+      - firewalld:
+          zone: public
+          service: https
+          state: enabled
+          immediate: yes
+          permanent: yes
+   - name: hosts file
+     lineinfile:
+       backup: yes
+       dest: /etc/hosts        
+       regexp: '.*{{ item }}$'
+       line: "{{ ansible_default_ipv4.address }} {{ item }}"
+     loop:
+       - host1.test
+       - host2.test
+       - host3.test
+   - name: vhost template
+     template: 
+       validate: "/usr/sbin/apachectl configtest %s"
+       src: apache.j2 
+       dest: "/etc/httpd/conf.d/virtualhost.conf"
+     with_items: "{{ apache_vhosts }}"
+     notify: restart_httpd
+   - name: vhost directories
+     file:
+       path: "{{ item.documentroot }}"
+       recurse: yes
+       state: directory
+       mode: 0770
+       owner: root
+       group: apache
+       setype: httpd_sys_content_t
+     with_items: "{{ apache_vhosts }}"
+      
+  - name: selinux context on vhost directories
+     sefcontext:
+       target: "{{ item.documentroot + '(/.*)?' }}"
+       setype: httpd_sys_content_t
+       state: present
+     with_items: "{{ apache_vhosts }}
+
+  - name: webserver running
+    systemd:
+      name: httpd
+      enabled: yes
+      state: started
+  handlers:
+  - name: restart apache
+    listen: restart_httpd
+    systemd:
+      name: httpd
+      state: restarted
+
